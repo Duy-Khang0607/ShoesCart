@@ -4,6 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ShoesItem from "./ShoesItem";
 import Cart from "./Cart";
+import ShoesDetails from "./ShoesDetails";
 export default class ShoesList extends Component {
   products = [
     {
@@ -148,6 +149,7 @@ export default class ShoesList extends Component {
     },
   ];
   state = {
+    isSelectItem:null,
     isShowCart: false,
     cart: [],
   };
@@ -155,12 +157,18 @@ export default class ShoesList extends Component {
     const html = this.products.map((item) => {
       return (
         <Col key={item.id} style={{padding: "30px"}}>
-          <ShoesItem item={item} addCart={this.addCart} />
+          <ShoesItem showDetails={this.showDetails} item={item} addCart={this.addCart} />
         </Col>
-      );
+      ); 
     });
     return html;
   };
+
+  showDetails = (data)=>{
+   this.setState({
+    isSelectItem:data,
+   })
+  }
 
   showCart = () => {
     this.setState({
@@ -268,6 +276,7 @@ export default class ShoesList extends Component {
             closeCart={this.closeCart}
           />
         )}
+        {this.state.isSelectItem ? (<ShoesDetails   item={this.state.isSelectItem} />):null}
       </Container>
     );
   }

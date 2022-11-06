@@ -18,7 +18,7 @@ export default class ShoesItem extends Component {
         >
           Thêm vào giỏ
         </button>
-        <button className="btn btn-dark p-2">Xem chi tiết</button>
+        <button onClick={()=>{this.props.showDetails(this.props.item)}} className="btn btn-dark p-2">Xem chi tiết</button>
       </div>
     );
   }
