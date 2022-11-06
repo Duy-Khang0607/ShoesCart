@@ -11,8 +11,10 @@ export default class ShoesItem extends Component {
         <h2>{this.props.item.name}</h2>
         <h4>${this.props.item.price}</h4>
         <button
-          onClick={() => this.props.addCart(this.props.item)}
-          className="btn btn-info p-2"
+          onClick={() => {
+            this.props.addCart(this.props.item);
+          }}
+          className="btn btn-info p-2 mr-2"
         >
           Thêm vào giỏ
         </button>

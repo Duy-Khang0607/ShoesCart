@@ -22,6 +22,7 @@ export default class Cart extends Component {
             left: "25%",
             transform: "translate(-25%,10%)",
             transition: "all 0.5s",
+            height: "100%",
             overflowY: "scroll",
           }}
         >
@@ -50,29 +51,55 @@ export default class Cart extends Component {
             <tbody>
               {this.props.cart.map((item) => {
                 return (
-                  <tr key={item.id}>
+                  <tr key={item.product.id}>
                     <td>{item.product.id}</td>
                     <td>{item.product.name}</td>
                     <td>
                       <img alt="Img" src={item.product.image} width="150px" />
                     </td>
                     <td className="d-flex justify-content-center">
-                      <button className="btn btn-secondary">-</button>
+                      <button
+                        onClick={() => {
+                          this.props.downQuantityCart(item.product.id);
+                        }}
+                        className="btn btn-secondary"
+                      >
+                        -
+                      </button>
                       <h5 className="mx-2">{item.quantity}</h5>
-                      <button className="btn btn-secondary">+</button>
+                      <button
+                        onClick={() => {
+                          this.props.upQuantityCart(item.product.id);
+                        }}
+                        className="btn btn-secondary"
+                      >
+                        +
+                      </button>
                     </td>
                     <td>{item.product.price}</td>
                     <td>{item.product.price * item.quantity}</td>
                     <td>
-                      <button className="btn btn-danger">Xóa</button>
+                      <button
+                        onClick={() => this.props.deleteCart()}
+                        className="btn btn-danger"
+                      >
+                        Xóa
+                      </button>
                     </td>
                   </tr>
                 );
               })}
+              <tr>
+              <div className="font-weight-bold" style={{borderTop:"1px dashed white",width:"100%"}}>
+                <span className="pl-3">TOTAL: ${this.props.totalProduct()}</span>
+               </div>
+              </tr>
             </tbody>
+            
           </table>
         </div>
       </div>
     );
   }
 }
+

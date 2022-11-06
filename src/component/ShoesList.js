@@ -4,7 +4,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ShoesItem from "./ShoesItem";
 import Cart from "./Cart";
-
 export default class ShoesList extends Component {
   products = [
     {
@@ -148,17 +147,15 @@ export default class ShoesList extends Component {
       image: "http://svcy3.myclass.vn/images/nike-air-max-270-react.png",
     },
   ];
-
   state = {
     isShowCart: false,
-    cart: [], // nên để ở componet chính là thằng:ShoesList
+    cart: [],
   };
-
   renderProducts = () => {
-    let html = this.products.map((item) => {
+    const html = this.products.map((item) => {
       return (
-        <Col className="p-4 " key={item.id}>
-          <ShoesItem addCart={this.addCart} item={item} />
+        <Col key={item.id} style={{padding: "30px"}}>
+          <ShoesItem item={item} addCart={this.addCart} />
         </Col>
       );
     });
@@ -178,55 +175,98 @@ export default class ShoesList extends Component {
   };
 
   addCart = (product) => {
-    // Tạo dữ liệu để push sp vô giỏ
     const cartItem = {
       product: product,
       quantity: 1,
     };
-    // Vì cart kh phải biến bth , mà là cái State nên k push vô dc => nên phải tạo thêm 1 mảng mới sao chép lại mảng cart
     const cloneCart = [...this.state.cart];
-    // Check sản phẩm có bị trùng không ?
-    const foundItem = cloneCart.find((item) => product.id === item.product.id);
-    if (foundItem) foundItem.quantity++;
+    const foundCart = cloneCart.find((item) => product.id === item.product.id);
+    if (foundCart) foundCart.quantity++;
     else {
       cloneCart.push(cartItem);
     }
     this.setState({
-      cart: cloneCart, // Cập nhật lại giở hàng vô mảng Cart
+      cart: cloneCart,
     });
     console.log(cloneCart);
   };
 
-  calcTotalInCart = () => {
-    let total = this.state.cart.reduce((total, item) => {
+  calcTotalProductInCart = () => {
+    const total = this.state.cart.reduce((total, item) => {
       return total + item.quantity;
     }, 0);
     return total;
   };
 
-  deleteCart = (id)=>{
+  deleteCart = () => {
+    const cloneCart = [...this.state.cart];
+    let checkID = cloneCart.findIndex((item) => item.id === item.product.id);
+    cloneCart.splice(checkID, 1);
+    this.setState({
+      cart: cloneCart,
+    });
+  };
 
-  }
+  upQuantityCart = (id) => {
+    const cloneCart = [...this.state.cart];
+    let checkID = cloneCart.find((item, index) => item.product.id === id);
+    if (checkID) checkID.quantity++;
+    this.setState({
+      cart: cloneCart,
+    });
+  };
+
+  downQuantityCart = (id) => {
+    const cloneCart = [...this.state.cart];
+    let checkID = cloneCart.find((item, index) => item.product.id === id);
+    if (checkID) checkID.quantity--;
+    this.setState({
+      cart: cloneCart,
+    });
+  };
+
+  totalProduct = () => {
+    const totals = this.state.cart.reduce((total, item) => {
+      return total + item.quantity * item.product.price;
+    }, 0);
+    return totals;
+  };
 
   render() {
     return (
-      <Container fluid>
+      <Container>
         <button
           onClick={this.showCart}
-          className="btn btn-dark position-fixed"
-          style={{
-            cursor: "pointer",
-            top: "10px",
-            right: "10px",
-            zIndex: "9999",
-          }}
+          className="btn btn-info position-fixed"
+          style={{top: "10px", right: "10px"}}
         >
-          <i className="fa fa-shoe-prints text-white fs-2 p-2"></i>
-          <span className="fs-5">({this.calcTotalInCart()})</span>
+          <i
+            className="fa fa-shopping-bag mr-2"
+            style={{fontSize: "1.5rem"}}
+          ></i>
+          <span
+            className="text-dark"
+            style={{
+              border: "2px dashed black",
+              padding: "2px 6px",
+              fontSize: "20px",
+              fontWeight: "bold",
+              boxShadow: "2px 2px 8px 5px white",
+            }}
+          >
+            {this.calcTotalProductInCart()}
+          </span>
         </button>
-        <Row className="mt-5">{this.renderProducts()}</Row>
+        <Row>{this.renderProducts()}</Row>
         {this.state.isShowCart && (
-          <Cart cart={this.state.cart} closeCart={this.closeCart} />
+          <Cart
+            totalProduct={this.totalProduct}
+            upQuantityCart={this.upQuantityCart}
+            downQuantityCart={this.downQuantityCart}
+            deleteCart={this.deleteCart}
+            cart={this.state.cart}
+            closeCart={this.closeCart}
+          />
         )}
       </Container>
     );
