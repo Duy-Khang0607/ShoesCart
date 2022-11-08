@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -149,26 +149,31 @@ export default class ShoesList extends Component {
     },
   ];
   state = {
-    isSelectItem:null,
+    isSelectItem: null,
     isShowCart: false,
     cart: [],
   };
   renderProducts = () => {
     const html = this.products.map((item) => {
       return (
-        <Col key={item.id} style={{padding: "30px"}}>
-          <ShoesItem showDetails={this.showDetails} item={item} addCart={this.addCart} />
+        <Col key={item.id} style={{ padding: "30px" }}>
+          <ShoesItem
+            showDetails={this.showDetails}
+            item={item}
+            addCart={this.addCart}
+          />
         </Col>
-      ); 
+      );
     });
     return html;
   };
 
-  showDetails = (data)=>{
-   this.setState({
-    isSelectItem:data,
-   })
-  }
+  showDetails = (data) => {
+    this.setState({
+      isSelectItem: data,
+    });
+    document.querySelector("#details").style.display = "block";
+  };
 
   showCart = () => {
     this.setState({
@@ -240,28 +245,29 @@ export default class ShoesList extends Component {
     return totals;
   };
 
+  closeDetail = () => {
+    document.querySelector("#details").style.display = "none";
+  };
+
   render() {
     return (
       <Container>
         <button
           onClick={this.showCart}
-          className="btn btn-info position-fixed"
-          style={{top: "10px", right: "10px"}}
-        >
+          className='btn btn-info position-fixed'
+          style={{ top: "10px", right: "10px" }}>
           <i
-            className="fa fa-shopping-bag mr-2"
-            style={{fontSize: "1.5rem"}}
-          ></i>
+            className='fa fa-shopping-bag mr-2'
+            style={{ fontSize: "1.5rem" }}></i>
           <span
-            className="text-dark"
+            className='text-dark'
             style={{
               border: "2px dashed black",
               padding: "2px 6px",
               fontSize: "20px",
               fontWeight: "bold",
               boxShadow: "2px 2px 8px 5px white",
-            }}
-          >
+            }}>
             {this.calcTotalProductInCart()}
           </span>
         </button>
@@ -276,7 +282,13 @@ export default class ShoesList extends Component {
             closeCart={this.closeCart}
           />
         )}
-        {this.state.isSelectItem ? (<ShoesDetails   item={this.state.isSelectItem} />):null}
+
+        {this.state.isSelectItem ? (
+          <ShoesDetails
+            closeDetail={this.closeDetail}
+            item={this.state.isSelectItem}
+          />
+        ) : null}
       </Container>
     );
   }
